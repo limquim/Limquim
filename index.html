@@ -40,6 +40,13 @@
             background: #2dc5bf;
             border-radius: 4px;
         }
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 3s infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col antialiased">
@@ -64,11 +71,18 @@
             </div>
 
             <!-- Botón Carrito en Navbar -->
-            <button onclick="toggleCart()" class="relative bg-limnavy hover:bg-limnavyhover text-white px-5 py-2.5 rounded-full font-bold flex items-center space-x-2 transition-transform duration-200 hover:scale-105 shadow-md">
-                <i class="fa-solid fa-cart-shopping text-limgreen"></i>
-                <span class="hidden sm:inline">Tu Carrito</span>
-                <span id="cart-count" class="bg-limgreen text-limnavy text-xs px-2 py-0.5 rounded-full font-extrabold">0</span>
-            </button>
+            <div class="flex items-center space-x-3">
+                <!-- Botón IA de acceso rápido -->
+                <button onclick="toggleAIDrawer()" class="relative bg-gradient-to-r from-limteal to-limgreen hover:opacity-90 text-white p-2.5 rounded-full font-bold flex items-center justify-center transition-transform duration-200 hover:scale-105 shadow-md" title="Consultar con IA">
+                    <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                </button>
+                
+                <button onclick="toggleCart()" class="relative bg-limnavy hover:bg-limnavyhover text-white px-5 py-2.5 rounded-full font-bold flex items-center space-x-2 transition-transform duration-200 hover:scale-105 shadow-md">
+                    <i class="fa-solid fa-cart-shopping text-limgreen"></i>
+                    <span class="hidden sm:inline">Tu Carrito</span>
+                    <span id="cart-count" class="bg-limgreen text-limnavy text-xs px-2 py-0.5 rounded-full font-extrabold">0</span>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -79,7 +93,7 @@
         
         <div class="max-w-5xl mx-auto text-center relative z-10">
             <span class="inline-block bg-white/10 text-limteal border border-limteal/30 px-4 py-1.5 rounded-full text-xs md:text-sm font-semibold uppercase tracking-wider mb-4 animate-pulse">
-                ✨ Excelencia en Limpieza y Estética Automotriz
+                ✨ Excelencia en Limpieza y Estática Automotriz
             </span>
             <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
                 Poder Limpiador que <span class="text-transparent bg-clip-text bg-gradient-to-r from-limteal to-limgreen">Transforma</span>
@@ -92,9 +106,9 @@
                 <a href="#catalogo" class="bg-limgreen hover:bg-opacity-90 text-limnavy font-extrabold px-8 py-3.5 rounded-full transition-transform hover:-translate-y-0.5 shadow-lg flex items-center">
                     <i class="fa-solid fa-basket-shopping mr-2"></i> Ver Catálogo de Productos
                 </a>
-                <a href="https://wa.me/584124438098" target="_blank" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold px-8 py-3.5 rounded-full transition flex items-center">
-                    <i class="fa-brands fa-whatsapp text-green-400 mr-2 text-lg"></i> Asesoría al WhatsApp
-                </a>
+                <button onclick="toggleAIDrawer()" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold px-8 py-3.5 rounded-full transition flex items-center shadow-lg">
+                    <i class="fa-solid fa-wand-magic-sparkles text-limteal mr-2 text-lg"></i> Preguntar al Asistente IA
+                </button>
             </div>
 
             <!-- Badges de características principales -->
@@ -262,6 +276,94 @@
         </div>
     </div>
 
+    <div id="ai-drawer" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="ai-title" role="dialog" aria-modal="true">
+        <!-- Fondo oscuro translúcido -->
+        <div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="toggleAIDrawer()"></div>
+
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                <!-- Header del Asistente AI -->
+                <div class="py-5 px-4 sm:px-6 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-limnavy to-slate-950 text-white">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-limteal to-limgreen flex items-center justify-center text-white shadow-md relative">
+                            <i class="fa-solid fa-robot text-base"></i>
+                            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 border-2 border-white rounded-full"></span>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold tracking-tight" id="ai-title">Limbi AI</h2>
+                            <p class="text-[10px] text-gray-300">Asesor Químico Inteligente</p>
+                        </div>
+                    </div>
+                    <button onclick="toggleAIDrawer()" class="text-white hover:text-gray-200 p-1 rounded-full hover:bg-white/10 transition">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Chat e Historial -->
+                <div id="ai-chat-body" class="flex-grow p-4 overflow-y-auto custom-scrollbar bg-slate-50 space-y-4">
+                    <!-- Mensaje de bienvenida -->
+                    <div class="flex items-start space-x-2.5 max-w-[85%]">
+                        <div class="w-8 h-8 rounded-full bg-limteal flex items-center justify-center text-white flex-shrink-0 text-xs font-bold">L</div>
+                        <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-xs sm:text-sm text-gray-700 space-y-2">
+                            <p>👋 ¡Hola! Soy <strong>Limbi</strong>, tu asesor virtual de <strong>LIM QUIM</strong> en Aragua.</p>
+                            <p>¿Tienes dudas sobre cómo quitar una mancha, limpiar tu vehículo o lavar tejidos difíciles? Escríbeme o <strong>sube una foto</strong> de la mancha o suciedad para recomendarte la fórmula ideal.</p>
+                            
+                            <!-- Sugerencias de prompts rápidas -->
+                            <div class="flex flex-col gap-1.5 pt-2">
+                                <button onclick="quickPrompt('¿Cómo limpio la grasa profunda del motor de mi auto?')" class="text-left text-xs bg-gray-100 hover:bg-limteal/10 hover:text-limteal p-2 rounded-lg transition font-medium text-gray-600">
+                                    🚗 Grasa profunda en el motor
+                                </button>
+                                <button onclick="quickPrompt('¿Qué producto sirve para remover manchas amarillas en ropa blanca?')" class="text-left text-xs bg-gray-100 hover:bg-limteal/10 hover:text-limteal p-2 rounded-lg transition font-medium text-gray-600">
+                                    👕 Manchas en ropa blanca
+                                </button>
+                                <button onclick="quickPrompt('Tengo sarro muy pegado en la poceta, ¿cómo lo quito?')" class="text-left text-xs bg-gray-100 hover:bg-limteal/10 hover:text-limteal p-2 rounded-lg transition font-medium text-gray-600">
+                                    🚽 Remover sarro de la poceta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Indicador de Carga -->
+                <div id="ai-loader" class="hidden px-4 py-2 bg-slate-50 flex items-center space-x-2">
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-limteal rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                        <div class="w-2 h-2 bg-limteal rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-2 h-2 bg-limteal rounded-full animate-bounce" style="animation-delay: 0.3s"></div>
+                    </div>
+                    <span class="text-xs text-gray-400 italic">Limbi está analizando la química...</span>
+                </div>
+
+                <!-- Barra de entrada de texto e imágenes -->
+                <div class="p-3 border-t border-gray-100 bg-white">
+                    <div id="image-preview-container" class="hidden mb-2 relative inline-block">
+                        <img id="image-preview" src="#" alt="Vista previa" class="h-16 w-16 object-cover rounded-xl border-2 border-limteal shadow">
+                        <button onclick="clearImageUpload()" class="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] shadow hover:bg-red-600">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <!-- Subir imagen -->
+                        <label class="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-limteal p-3 rounded-xl transition flex items-center justify-center flex-shrink-0" title="Subir foto de la mancha">
+                            <input type="file" id="ai-image-input" accept="image/*" class="hidden" onchange="handleImageUpload(this)">
+                            <i class="fa-solid fa-camera text-lg"></i>
+                        </label>
+                        
+                        <!-- Input de texto -->
+                        <input type="text" id="ai-input" placeholder="Pregúntame o describe el problema..." class="flex-grow bg-gray-100 border border-transparent focus:border-limteal focus:bg-white rounded-xl py-2.5 px-4 text-xs sm:text-sm focus:outline-none transition" onkeydown="if(event.key === 'Enter') sendAIMessage()">
+                        
+                        <!-- Botón Enviar -->
+                        <button onclick="sendAIMessage()" class="bg-limnavy hover:bg-limnavyhover text-white p-3 rounded-xl transition flex items-center justify-center flex-shrink-0 shadow">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <p class="text-[9px] text-gray-400 mt-1.5 text-center">Desarrollado con Tecnología Google Gemini para LIM QUIM.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="bg-limnavy text-white pt-12 pb-6 border-t-4 border-limgreen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <!-- Columna Logo/Frase -->
@@ -311,6 +413,12 @@
         </div>
     </footer>
 
+    <!-- Botón Flotante del Asistente Químico IA -->
+    <button onclick="toggleAIDrawer()" class="fixed bottom-24 right-6 bg-gradient-to-r from-limteal to-limgreen text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 z-30 group animate-pulse-slow" title="Consultar a Limbi IA">
+        <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
+        <span class="absolute right-16 bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 shadow">¿Preguntas sobre manchas?</span>
+    </button>
+
     <!-- Botón Flotante de WhatsApp para Consulta Rápida -->
     <a href="https://wa.me/584124438098?text=Hola,%20quisiera%20hacer%20una%20consulta%20sobre%20sus%20productos." target="_blank" class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 z-30 group" title="Escríbenos por WhatsApp">
         <i class="fa-brands fa-whatsapp text-3xl"></i>
@@ -350,6 +458,8 @@
 
         // Estado del Carrito
         let cart = [];
+        let uploadedImageBase64 = null;
+        let uploadedImageMimeType = null;
 
         // Inicializar sitio al cargar ventana
         window.onload = function() {
@@ -438,6 +548,17 @@
             }
         }
 
+        function toggleAIDrawer() {
+            const drawer = document.getElementById('ai-drawer');
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            } else {
+                drawer.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
@@ -460,7 +581,6 @@
             showToast(`¡${product.name} agregado al pedido!`);
         }
 
-        // Actualizar la interfaz del carrito
         function updateCartUI() {
             const cartItemsContainer = document.getElementById('cart-items');
             const cartCountElement = document.getElementById('cart-count');
@@ -495,7 +615,6 @@
                         <span class="text-[11px] text-gray-500 block mt-0.5">$${item.price.toFixed(2)} c/u</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <!-- Botones de incremento/decremento -->
                         <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">
                             <button onclick="updateQty(${item.id}, -1)" class="px-2.5 py-1 text-gray-500 hover:bg-gray-100 transition font-bold text-xs">-</button>
                             <span class="px-3 py-1 font-bold text-xs text-limnavy bg-gray-50">${item.qty}</span>
@@ -512,7 +631,6 @@
             cartTotalElement.textContent = `$${totalCost.toFixed(2)}`;
         }
 
-        // Cambiar cantidad de un producto
         function updateQty(productId, amount) {
             const item = cart.find(item => item.id === productId);
             if (!item) return;
@@ -526,21 +644,18 @@
             }
         }
 
-        // Quitar un producto por completo
         function removeItem(productId) {
             cart = cart.filter(item => item.id !== productId);
             saveCartToLocalStorage();
             updateCartUI();
         }
 
-        // Limpiar el carrito de compras
         function clearCart() {
             cart = [];
             saveCartToLocalStorage();
             updateCartUI();
         }
 
-        // LocalStorage persistencia
         function saveCartToLocalStorage() {
             localStorage.setItem('limquim_cart_simple', JSON.stringify(cart));
         }
@@ -553,13 +668,12 @@
             }
         }
 
-        // Enviar pedido detallado a WhatsApp
         function checkoutWhatsApp() {
             if (cart.length === 0) {
                 return;
             }
 
-            const phoneNumber = '584124438098'; // Número de WhatsApp de LimQuim
+            const phoneNumber = '584124438098';
             let message = '¡Hola LimQuim! 👋\n';
             message += 'Quiero realizar un pedido con los siguientes productos:\n\n';
 
@@ -577,15 +691,12 @@
             message += `🚚 *Solicitud de Delivery:* Sí, coordinar según volumen de compra.\n\n`;
             message += '¿Me podrían confirmar la disponibilidad para concretar el pago y despacho? ¡Muchas gracias!';
 
-            // Codificar el mensaje para URL
             const encodedText = encodeURIComponent(message);
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedText}`;
 
-            // Abrir WhatsApp en pestaña nueva
             window.open(whatsappURL, '_blank');
         }
 
-        // Crear una pequeña notificación visual flotante (Toast)
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = "fixed bottom-24 left-1/2 -translate-x-1/2 bg-limnavy text-white px-5 py-3 rounded-full text-xs sm:text-sm font-bold shadow-2xl flex items-center space-x-2 z-50 animate-bounce";
@@ -599,6 +710,252 @@
                 toast.classList.add('opacity-0', 'transition-all', 'duration-500');
                 setTimeout(() => toast.remove(), 500);
             }, 2500);
+        }
+
+        function handleImageUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgData = e.target.result;
+                document.getElementById('image-preview').src = imgData;
+                document.getElementById('image-preview-container').classList.remove('hidden');
+                
+                // Extraer el base64 limpio y el tipo MIME
+                uploadedImageBase64 = imgData.split(',')[1];
+                uploadedImageMimeType = file.type;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function clearImageUpload() {
+            document.getElementById('ai-image-input').value = '';
+            document.getElementById('image-preview').src = '#';
+            document.getElementById('image-preview-container').classList.add('hidden');
+            uploadedImageBase64 = null;
+            uploadedImageMimeType = null;
+        }
+
+        function quickPrompt(text) {
+            document.getElementById('ai-input').value = text;
+            sendAIMessage();
+        }
+
+        async function callGeminiAPI(userQuery, imageBase64, imageMimeType) {
+            const apiKey = ""; // Canvas inyectará de manera dinámica la API key aquí en tiempo de ejecución.
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const systemInstruction = `
+            Eres "Limbi", el asesor experto en química de limpieza y estética automotriz de la empresa "LIM QUIM", ubicada en Santa Rita, Aragua, Venezuela.
+            
+            Tu catálogo de productos reales y disponibles (con sus IDs únicos para recomendación directa) es el siguiente:
+            - ID 1: Lavaplatos Concentrado ($1.20)
+            - ID 2: Cloro Concentrado al 3% ($1.00)
+            - ID 3: Desinfectante Multiusos ($1.00)
+            - ID 4: Suavizante de Ropa Premium ($1.50)
+            - ID 5: Limpia Vidrios Antiempañante ($1.20)
+            - ID 6: Jabón Líquido tipo Ariel ($1.20)
+            - ID 7: Jabón Líquido para Manos ($1.50)
+            - ID 8: Limpia WC Desincrustante ($2.50)
+            - ID 9: Blanqueador de Oxígeno Activo ($1.50)
+            - ID 10: Desengrasante Automotriz ($1.50)
+            - ID 11: Desengrasante Automotriz (Alto Rendimiento) ($3.00)
+            - ID 12: Jabón Multiuso Institucional ($1.60)
+            - ID 13: Desengrasante Industrial Fuerte ($1.60)
+
+            Cuando el usuario te pregunte cómo resolver un problema de limpieza (suciedad, grasa, ropa, baños) o te suba una foto de una mancha/área sucia, debes analizar detalladamente su caso y responder en español de Venezuela de manera amigable, profesional y estructurada.
+
+            Debes retornar tu respuesta OBLIGATORIAMENTE en formato JSON puro según el siguiente esquema estricto de schema:
+            {
+                "explicacion": "Explicación detallada de cómo limpiar, qué está causando el problema y consejos específicos de uso.",
+                "consejos": ["Consejo práctico 1", "Consejo práctico 2", "Consejo práctico 3"],
+                "productosRecomendados": [
+                    {
+                        "id": 10,
+                        "razon": "Explicación de por qué este producto LimQuim en específico le ayudará."
+                    }
+                ]
+            }
+
+            Si no aplica ningún producto, deja el array "productosRecomendados" vacío. Responde únicamente con el bloque JSON válido, sin delimitadores adicionales que rompan la respuesta.
+            `;
+
+            const contents = [];
+            const userPart = { role: "user", parts: [{ text: userQuery }] };
+            
+            if (imageBase64 && imageMimeType) {
+                userPart.parts.push({
+                    inlineData: {
+                        mimeType: imageMimeType,
+                        data: imageBase64
+                    }
+                });
+            }
+            contents.push(userPart);
+
+            const payload = {
+                contents: contents,
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "explicacion": { "type": "STRING" },
+                            "consejos": { "type": "ARRAY", "items": { "type": "STRING" } },
+                            "productosRecomendados": {
+                                "type": "ARRAY",
+                                "items": {
+                                    "type": "OBJECT",
+                                    "properties": {
+                                        "id": { "type": "INTEGER" },
+                                        "razon": { "type": "STRING" }
+                                    },
+                                    "required": ["id", "razon"]
+                                }
+                            }
+                        },
+                        "required": ["explicacion", "consejos", "productosRecomendados"]
+                    }
+                },
+                systemInstruction: {
+                    parts: [{ text: systemInstruction }]
+                }
+            };
+
+            // Implementación de reintentos con exponencial backoff para estabilidad técnica
+            let delay = 1000;
+            for (let i = 0; i < 3; i++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                } catch (e) {
+                    // Ignorar error para proceder al reintento
+                }
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            }
+            throw new Error("No se pudo conectar con el servidor químico. Intente más tarde.");
+        }
+
+        async function sendAIMessage() {
+            const inputEl = document.getElementById('ai-input');
+            const queryText = inputEl.value.trim();
+            if (!queryText && !uploadedImageBase64) return;
+
+            const chatBody = document.getElementById('ai-chat-body');
+            const loader = document.getElementById('ai-loader');
+
+            // 1. Mostrar mensaje del usuario en el chat
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'flex items-start justify-end space-x-2.5 ml-auto max-w-[85%]';
+            
+            let userImgHTML = '';
+            if (uploadedImageBase64) {
+                userImgHTML = `<img src="data:${uploadedImageMimeType};base64,${uploadedImageBase64}" class="h-24 w-auto rounded-lg mb-2 border shadow border-limteal">`;
+            }
+
+            userMsgDiv.innerHTML = `
+                <div class="bg-limnavy text-white p-3 rounded-2xl rounded-tr-none shadow-sm text-xs sm:text-sm text-right space-y-1">
+                    ${userImgHTML}
+                    <p>${queryText || "Análisis de foto cargada"}</p>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-gray-600 flex-shrink-0 text-xs font-bold">Yo</div>
+            `;
+            chatBody.appendChild(userMsgDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // Almacenar referencias locales temporales y limpiar input
+            const currentQuery = queryText || "Analiza la mancha o suciedad de la imagen adjunta e indica qué producto LimQuim se adapta mejor para su remoción.";
+            const currentImgBase64 = uploadedImageBase64;
+            const currentImgMime = uploadedImageMimeType;
+
+            inputEl.value = '';
+            clearImageUpload();
+            loader.classList.remove('hidden');
+
+            try {
+                // 2. Llamada directa a la API
+                const data = await callGeminiAPI(currentQuery, currentImgBase64, currentImgMime);
+                loader.classList.add('hidden');
+
+                const candidate = data.candidates?.[0];
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const parsedJson = JSON.parse(candidate.content.parts[0].text);
+                    
+                    // 3. Renderizar respuesta inteligente del Asistente
+                    const aiMsgDiv = document.createElement('div');
+                    aiMsgDiv.className = 'flex items-start space-x-2.5 max-w-[85%]';
+                    
+                    // Construcción de tarjetas recomendadas
+                    let recommendedHTML = '';
+                    if (parsedJson.productosRecomendados && parsedJson.productosRecomendados.length > 0) {
+                        recommendedHTML += `<div class="mt-3 space-y-2 border-t pt-2 border-gray-100">
+                            <span class="text-[10px] font-extrabold text-limteal uppercase tracking-wider block">🛍️ Recomendación LimQuim:</span>`;
+                        
+                        parsedJson.productosRecomendados.forEach(rec => {
+                            const prod = products.find(p => p.id === rec.id);
+                            if (prod) {
+                                recommendedHTML += `
+                                    <div class="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-3 shadow-sm space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-extrabold text-limnavy text-xs">${prod.name}</span>
+                                            <span class="bg-limgreen/20 text-limnavy text-[10px] font-extrabold px-2 py-0.5 rounded-full">$${prod.price.toFixed(2)}</span>
+                                        </div>
+                                        <p class="text-[11px] text-gray-500 leading-tight">${rec.razon}</p>
+                                        <button onclick="addToCart(${prod.id})" class="w-full bg-limteal hover:bg-limtealhover text-white py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center space-x-1 shadow-sm">
+                                            <i class="fa-solid fa-cart-plus"></i>
+                                            <span>Agregar al Pedido</span>
+                                        </button>
+                                    </div>
+                                `;
+                            }
+                        });
+                        recommendedHTML += `</div>`;
+                    }
+
+                    // Consejos prácticos
+                    let tipsHTML = '';
+                    if (parsedJson.consejos && parsedJson.consejos.length > 0) {
+                        tipsHTML += `<ul class="list-disc list-inside space-y-1 text-xs text-gray-600 pl-1 pt-1.5">`;
+                        parsedJson.consejos.forEach(tip => {
+                            tipsHTML += `<li>${tip}</li>`;
+                        });
+                        tipsHTML += `</ul>`;
+                    }
+
+                    aiMsgDiv.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-limteal to-limgreen flex items-center justify-center text-white flex-shrink-0 text-xs font-bold">L</div>
+                        <div class="bg-white p-3.5 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-xs sm:text-sm text-gray-700 space-y-2">
+                            <p class="leading-relaxed">${parsedJson.explicacion}</p>
+                            ${tipsHTML}
+                            ${recommendedHTML}
+                        </div>
+                    `;
+                    chatBody.appendChild(aiMsgDiv);
+                } else {
+                    throw new Error("No pudimos analizar el mensaje");
+                }
+            } catch (err) {
+                loader.classList.add('hidden');
+                // Respuesta de fallback elegante en caso de errores técnicos
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'flex items-start space-x-2.5 max-w-[85%]';
+                errorDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-500 flex-shrink-0 text-xs font-bold"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="bg-red-50 p-3 rounded-2xl rounded-tl-none border border-red-100 text-xs text-red-800">
+                        Lo siento, experimentamos un inconveniente conectando con nuestro laboratorio de IA. Por favor, realiza tu consulta directamente a nuestro WhatsApp oficial: <strong>+58 412-4438098</strong>.
+                    </div>
+                `;
+                chatBody.appendChild(errorDiv);
+            }
+            chatBody.scrollTop = chatBody.scrollHeight;
         }
     </script>
 </body>
