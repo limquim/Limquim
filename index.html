@@ -47,6 +47,16 @@
         .animate-pulse-slow {
             animation: pulse-slow 3s infinite;
         }
+        /* Estilos del Carrusel para transiciones fluidas */
+        .carousel-item {
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+            transform: scale(0.98);
+        }
+        .carousel-item.active {
+            opacity: 1;
+            transform: scale(1);
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col antialiased">
@@ -140,6 +150,77 @@
             <span>Ofrecemos <strong>delivery a zonas céntricas</strong> según el volumen de tu compra. ¡Consúltanos directo al WhatsApp!</span>
         </div>
     </div>
+
+    <!-- Sección del Carrusel Destacado -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 w-full">
+        <div id="promo-carousel" class="relative overflow-hidden rounded-3xl bg-slate-900 h-64 md:h-80 text-white shadow-lg" onmouseenter="pauseCarousel()" onmouseleave="resumeCarousel()">
+            
+            <!-- Contenedor de Diapositivas -->
+            <div id="carousel-slides" class="relative w-full h-full">
+                
+                <!-- Slide 1: Estética Automotriz -->
+                <div class="carousel-item active absolute inset-0 w-full h-full bg-gradient-to-r from-limnavy via-slate-800 to-limteal flex items-center px-8 md:px-16">
+                    <div class="max-w-xl z-10 space-y-3">
+                        <span class="bg-limteal/20 text-limteal border border-limteal/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"><i class="fa-solid fa-car mr-1.5"></i> Estética Automotriz</span>
+                        <h3 class="text-2xl md:text-4xl font-extrabold leading-tight">Brillo y Cuidado para tu Vehículo</h3>
+                        <p class="text-sm md:text-base text-gray-200 font-light">Limpia, protege y desengrasa con nuestras fórmulas especializadas para el motor y exteriores.</p>
+                        <button onclick="scrollToCatalogAndFilter('automotriz')" class="mt-2 bg-limgreen hover:bg-opacity-95 text-limnavy font-extrabold text-xs md:text-sm px-5 py-2.5 rounded-xl shadow-md transition-all">
+                            Ver Línea Automotriz <i class="fa-solid fa-circle-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                    <div class="absolute right-8 md:right-20 opacity-15 md:opacity-30 pointer-events-none">
+                        <i class="fa-solid fa-car-rear text-9xl md:text-[12rem] text-white"></i>
+                    </div>
+                </div>
+
+                <!-- Slide 2: Línea del Hogar -->
+                <div class="carousel-item absolute inset-0 w-full h-full bg-gradient-to-r from-slate-900 via-limnavy to-limgreen/60 flex items-center px-8 md:px-16">
+                    <div class="max-w-xl z-10 space-y-3">
+                        <span class="bg-limgreen/20 text-limgreen border border-limgreen/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"><i class="fa-solid fa-house mr-1.5"></i> Rendimiento en el Hogar</span>
+                        <h3 class="text-2xl md:text-4xl font-extrabold leading-tight">Máxima Limpieza al Mejor Precio</h3>
+                        <p class="text-sm md:text-base text-gray-200 font-light">Lavaplatos, desinfectantes y cloro de alta concentración que rinden el doble en tu hogar.</p>
+                        <button onclick="scrollToCatalogAndFilter('hogar')" class="mt-2 bg-limteal hover:bg-opacity-95 text-white font-extrabold text-xs md:text-sm px-5 py-2.5 rounded-xl shadow-md transition-all">
+                            Ver Línea Hogar <i class="fa-solid fa-circle-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                    <div class="absolute right-8 md:right-20 opacity-15 md:opacity-30 pointer-events-none">
+                        <i class="fa-solid fa-hands-bubbles text-9xl md:text-[12rem] text-white"></i>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Promoción Delivery -->
+                <div class="carousel-item absolute inset-0 w-full h-full bg-gradient-to-r from-limnavy via-slate-800 to-amber-600/70 flex items-center px-8 md:px-16">
+                    <div class="max-w-xl z-10 space-y-3">
+                        <span class="bg-amber-400/20 text-amber-300 border border-amber-300/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"><i class="fa-solid fa-truck mr-1.5"></i> Despacho en Aragua</span>
+                        <h3 class="text-2xl md:text-4xl font-extrabold leading-tight">Despachos a Zonas Céntricas</h3>
+                        <p class="text-sm md:text-base text-gray-200 font-light">Coordinamos la entrega a domicilio dependiendo del volumen de tu compra. ¡Arma tu orden!</p>
+                        <a href="https://wa.me/584124438098" target="_blank" class="inline-block mt-2 bg-white hover:bg-gray-100 text-limnavy font-extrabold text-xs md:text-sm px-5 py-2.5 rounded-xl shadow-md transition-all">
+                            Chatear en WhatsApp <i class="fa-brands fa-whatsapp text-green-500 ml-1 text-sm"></i>
+                        </a>
+                    </div>
+                    <div class="absolute right-8 md:right-20 opacity-15 md:opacity-30 pointer-events-none">
+                        <i class="fa-solid fa-truck-ramp-box text-9xl md:text-[12rem] text-white"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Controles de Navegación Flechas -->
+            <button onclick="prevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center transition text-white hover:scale-105 z-20">
+                <i class="fa-solid fa-chevron-left text-sm md:text-base"></i>
+            </button>
+            <button onclick="nextSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/30 hover:bg-black/50 flex items-center justify-center transition text-white hover:scale-105 z-20">
+                <i class="fa-solid fa-chevron-right text-sm md:text-base"></i>
+            </button>
+
+            <!-- Indicadores de Posición (Dots) -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-20">
+                <button onclick="goToSlide(0)" class="carousel-dot w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300"></button>
+                <button onclick="goToSlide(1)" class="carousel-dot w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300"></button>
+                <button onclick="goToSlide(2)" class="carousel-dot w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300"></button>
+            </div>
+        </div>
+    </section>
 
     <main id="catalogo" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         <div class="text-center mb-10">
@@ -273,7 +354,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <!-- Columna Logo -->
             <div>
-                <img src="LimQuim 2025 PDF_page-0001.jpg" alt="LimQuim Logo" class="h-16 w-auto mb-4 object-contain brightness-0 invert" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'text-2xl font-bold text-white mb-4\'>LIM QUIM</div>';">
+                <img src="LimQuim 2025 PDF_page-0001.jpg" alt="LimQuim Logo" class="h-16 w-auto mb-4 object-contain transition-transform duration-300 hover:scale-105" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'flex items-center space-x-2\'><span class=\'text-3xl font-extrabold text-white\'>LIM</span><span class=\'text-3xl font-extrabold text-limgreen\'>QUIM</span></div>';">
                 <p class="text-gray-300 text-sm leading-relaxed">
                     Soluciones avanzadas para el mantenimiento de vehículos, hogares e industrias con fórmulas garantizadas de alta efectividad.
                 </p>
@@ -362,6 +443,7 @@
         window.onload = function() {
             renderProducts('todos');
             loadCartFromLocalStorage();
+            initCarousel(); // Inicializar el carrusel
         }
 
         // Renderizado del Catálogo de Productos
@@ -433,6 +515,91 @@
 
             renderProducts(category);
         }
+
+        // --- SISTEMA DEL CARRUSEL ---
+        let currentSlideIdx = 0;
+        let carouselInterval = null;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        function initCarousel() {
+            showSlide(currentSlideIdx);
+            resumeCarousel();
+
+            // Soporte para gestos táctiles (Swiping) en pantallas móviles
+            const carouselEl = document.getElementById('promo-carousel');
+            carouselEl.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            carouselEl.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+        }
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.carousel-item');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            if (index >= slides.length) currentSlideIdx = 0;
+            if (index < 0) currentSlideIdx = slides.length - 1;
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active', 'z-10');
+                slide.classList.add('opacity-0', 'pointer-events-none');
+                dots[i].className = "carousel-dot w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all duration-300";
+                if (i === currentSlideIdx) {
+                    slide.classList.add('active', 'z-10');
+                    slide.classList.remove('opacity-0', 'pointer-events-none');
+                    dots[i].className = "carousel-dot w-6 h-2.5 rounded-full bg-limgreen transition-all duration-300";
+                }
+            });
+        }
+
+        function nextSlide() {
+            currentSlideIdx++;
+            showSlide(currentSlideIdx);
+        }
+
+        function prevSlide() {
+            currentSlideIdx--;
+            showSlide(currentSlideIdx);
+        }
+
+        function goToSlide(index) {
+            currentSlideIdx = index;
+            showSlide(currentSlideIdx);
+        }
+
+        function pauseCarousel() {
+            clearInterval(carouselInterval);
+        }
+
+        function resumeCarousel() {
+            pauseCarousel();
+            carouselInterval = setInterval(nextSlide, 5000); // Rotar cada 5 segundos
+        }
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchStartX - touchEndX > swipeThreshold) {
+                // Deslizó hacia la izquierda, siguiente slide
+                nextSlide();
+            } else if (touchEndX - touchStartX > swipeThreshold) {
+                // Deslizó hacia la derecha, slide anterior
+                prevSlide();
+            }
+        }
+
+        // Función que redirige y filtra el catálogo dinámicamente
+        function scrollToCatalogAndFilter(category) {
+            filterProducts(category);
+            const catalogSection = document.getElementById('catalogo');
+            catalogSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- MANEJO DEL CARRITO ---
 
         // Mostrar / Ocultar el Carrito
         function toggleCart() {
